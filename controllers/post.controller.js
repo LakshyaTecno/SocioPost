@@ -29,6 +29,7 @@ exports.likePost = async (req, res) => {
     if (post.likes.includes(user._id)) {
       res.status(403).send({
         msg: "You already like this post",
+        post,
       });
     }
     post.likes.push(user._id);

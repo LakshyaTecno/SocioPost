@@ -46,9 +46,26 @@ const isValidPostIdInRequestParam = async (req, res, next) => {
   }
 };
 
+const isCommentHavingData = async (req, res, next) => {
+  try {
+    if (!req.body.text) {
+      return res.status(400).send({
+        message: "Failed text is not provided",
+      });
+    }
+    next();
+  } catch (err) {
+    console.log("Error while reading the user info", err.message);
+    return res.status(500).send({
+      message: "Some Internal server error",
+    });
+  }
+};
+
 const verifyPostRequestBodies = {
   validateCreatePostBody: validateCreatePostBody,
   isValidPostIdInRequestParam: isValidPostIdInRequestParam,
+  isCommentHavingData: isCommentHavingData,
 };
 
 module.exports = verifyPostRequestBodies;

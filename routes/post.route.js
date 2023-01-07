@@ -23,6 +23,7 @@ module.exports = (app) => {
       authJwt.verifyToken,
       authJwt.isCuruserisAdminOrUser,
       verifyPostRequestBodies.isValidPostIdInRequestParam,
+      verifyPostRequestBodies.isCommentHavingData,
     ],
     postController.commentOnPost
   );
