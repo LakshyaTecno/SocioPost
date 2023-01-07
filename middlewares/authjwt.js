@@ -53,6 +53,21 @@ const isAdminOrUser = async (req, res, next) => {
   }
 };
 
+const isCuruserisAdminOrUser = async (req, res, next) => {
+  const curUser = await User.findOne({ userId: req.userId });
+
+  if (
+    curUser.userType == constants.userTypes.admin ||
+    curUser.userType == constants.userTypes.user
+  ) {
+    next();
+  } else {
+    res.status(400).send({
+      message: "Only Admin or  User are able to access these end point",
+    });
+  }
+};
+
 const isValidUserIdInRequestParam = async (req, res, next) => {
   try {
     const user = await User.findOne({ userId: req.params.id });
@@ -76,6 +91,7 @@ const authJwt = {
   isAdmin: isAdmin,
   isValidUserIdInRequestParam: isValidUserIdInRequestParam,
   isAdminOrUser: isAdminOrUser,
+  isCuruserisAdminOrUser: isCuruserisAdminOrUser,
 };
 
 module.exports = authJwt;

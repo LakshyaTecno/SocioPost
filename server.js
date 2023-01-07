@@ -7,6 +7,7 @@ const dbConfig = require("./configs/db.config");
 const User = require("./models/userSchema");
 const bcrypt = require("bcryptjs");
 const constants = require("./utils/constants");
+const Post = require("./models/postSchema");
 
 app.use(bodyparser.json());
 
@@ -26,6 +27,8 @@ db.once("open", () => {
 async function init() {
   try {
     await User.collection.drop();
+
+    await Post.collection.drop();
 
     const users = await User.insertMany([
       {
@@ -66,6 +69,8 @@ async function init() {
 
 require("./routes/auth.route")(app);
 require("./routes/user.route")(app);
+
+require("./routes/post.route")(app);
 
 console.log(serverConfig);
 app.listen(serverConfig.PORT, () => {

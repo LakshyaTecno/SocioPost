@@ -3,7 +3,7 @@ const User = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const secretConfig = require("../configs/auth.config");
 const constants = require("../utils/constants");
-
+const objectConverter = require("../utils/objectConverter");
 exports.signup = async (req, res) => {
   const userObj = {
     userId: req.body.userId,
@@ -14,15 +14,7 @@ exports.signup = async (req, res) => {
   try {
     const userCreated = await User.create(userObj);
 
-    const response = {
-      userId: userCreated.userId,
-      email: userCreated.email,
-      userType: userCreated.userType,
-      createdAt: userCreated.createdAt,
-      updatedAt: userCreated.updatedAt,
-    };
-
-    res.status(201).send(response);
+    res.status(201).send(objectConverter.userResponse(userCreated));
   } catch (err) {
     console.log("Some Err happend", err.message);
     res.status(500).send({
