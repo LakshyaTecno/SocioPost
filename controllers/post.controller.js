@@ -1,5 +1,7 @@
 const Post = require("../models/postSchema");
+const { find } = require("../models/userSchema");
 const User = require("../models/userSchema");
+const sendNotification = require("../utils/notificationClient");
 
 exports.createPost = async (req, res) => {
   try {
@@ -12,7 +14,22 @@ exports.createPost = async (req, res) => {
     };
     const postCreated = await Post.create(post);
     user.posts.push(postCreated._id);
-    await user.save();
+    const updatedUser = await user.save();
+    console.log("here");
+    console.log(updatedUser);
+    const recepients = await User.find({ _id: { $in: updatedUser.followers } });
+    const recepientsEmails = recepients.map((recepient) => {
+      return recepient.email;
+    });
+    console.log(recepientsEmails);
+
+    sendNotification(
+      `Post Added by ${user.userId}`,
+      `checkout ${user.userId} is posted ${post.caption} interested `,
+      `${recepientsEmails}`,
+      "no-reply-SocioPost@gmail.com",
+      "SocioPostApp"
+    );
     res.status(201).send(postCreated);
   } catch (err) {
     console.log("Some Err happend", err.message);
@@ -33,7 +50,18 @@ exports.likePost = async (req, res) => {
       });
     }
     post.likes.push(user._id);
-    await post.save();
+
+    const updatedPost = await post.save();
+    const postCreatedby = await User.findOne({ _id: updatedPost.user });
+    if (postCreatedby._id !== user._id) {
+      sendNotification(
+        `Post like by ${user.userId}`,
+        `checkout ${user.userId} is like Your post ${post.caption} `,
+        `${postCreatedby.email}`,
+        "no-reply-SocioPost@gmail.com",
+        "SocioPostApp"
+      );
+    }
     res.status(201).send(post);
   } catch (err) {
     console.log("Some Err happend", err.message);
@@ -52,7 +80,17 @@ exports.commentOnPost = async (req, res) => {
       text: req.body.text,
     };
     post.comments.push(commentData);
-    await post.save();
+    const updatedPost = await post.save();
+    const postCreatedby = await User.findOne({ _id: updatedPost.user });
+    if (postCreatedby._id !== user._id) {
+      sendNotification(
+        `${user.userId} comment on your Post`,
+        `checkout ${user.userId} is comment Your post ${post._id} `,
+        `${postCreatedby.email}`,
+        "no-reply-SocioPost@gmail.com",
+        "SocioPostApp"
+      );
+    }
     res.status(201).send(post);
   } catch (err) {
     console.log("Some Err happend", err.message);
