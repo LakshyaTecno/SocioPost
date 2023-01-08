@@ -44,6 +44,16 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.SchemaTypes.ObjectId],
     ref: "Post",
   },
+  startTime: {
+    type: Date,
+  },
+  endTime: {
+    type: Date,
+  },
+  isTokenValid: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     immutable: true,

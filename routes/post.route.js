@@ -27,4 +27,10 @@ module.exports = (app) => {
     ],
     postController.commentOnPost
   );
+  app.get(
+    "/sociopost/api/v1/posts/most-liked",
+
+    [authJwt.verifyToken],
+    postController.posthavingMostLike
+  );
 };

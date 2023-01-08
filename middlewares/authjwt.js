@@ -12,15 +12,18 @@ const verifyToken = (req, res, next) => {
   }
   jwt.verify(token, authConfig.secret, async (err, decoded) => {
     if (err) {
-      await User.findOneAndUpdate(
-        { userId: req.userId },
-        { userStatus: constants.userStatus.inActive }
-      );
       return res.status(401).send({
         message: "UnAuthorized",
       });
     }
+
     req.userId = decoded.id;
+    const user = await User.findOne({ userId: req.userId });
+    if (user.userStatus == constants.userStatus.inActive) {
+      return res.status(401).send({
+        message: "UnAuthorized Please signin again you already singout ",
+      });
+    }
     next();
   });
 };

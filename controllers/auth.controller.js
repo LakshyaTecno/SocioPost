@@ -27,6 +27,7 @@ exports.signin = async (req, res) => {
   try {
     const usr = await User.findOne({ userId: req.body.userId });
     usr.userStatus = constants.userStatus.active;
+    usr.startTime = Date.now();
     const user = await usr.save();
     if (!user) {
       return res.status(400).send({
@@ -54,7 +55,7 @@ exports.signin = async (req, res) => {
         expiresIn: 600,
       }
     );
-
+    console.log(user);
     res.status(200).send({
       name: user.name,
       userId: user.userId,
@@ -62,6 +63,28 @@ exports.signin = async (req, res) => {
       userType: user.userType,
       userStatus: user.userStatus,
       accessToken: token,
+      isTokenValid: user.isTokenValid,
+    });
+  } catch (err) {
+    console.log("Some Err happend", err.message);
+    res.status(500).send({
+      message: "Some Internal server error",
+    });
+  }
+};
+
+exports.signout = async (req, res) => {
+  try {
+    const usr = await User.findOne({ userId: req.userId });
+    usr.userStatus = constants.userStatus.inActive;
+    usr.endTime = Date.now();
+    const user = await usr.save();
+    res.status(200).send({
+      name: user.name,
+      userId: user.userId,
+      email: user.email,
+      userType: user.userType,
+      userStatus: user.userStatus,
     });
   } catch (err) {
     console.log("Some Err happend", err.message);

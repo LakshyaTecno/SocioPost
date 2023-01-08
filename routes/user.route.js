@@ -7,7 +7,11 @@ module.exports = (app) => {
     [authJwt.verifyToken, authJwt.isAdmin],
     userController.findAll
   );
-
+  app.get(
+    "/sociopost/api/v1/users/topFiveActiveUsers",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    userController.topFiveActiveUsers
+  );
   app.get(
     "/sociopost/api/v1/users/:id",
     [

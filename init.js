@@ -46,7 +46,7 @@ module.exports = async () => {
         user: user1._id,
         caption: "I like javascipt",
         tags: ["#coding"],
-        likes: [user2._id, user3._id],
+        likes: [admin._id, user2._id, user3._id],
         comments: [
           { user: user2._id, text: "we are js developers" },
           { user: user3._id, text: "yes we are developers" },
@@ -80,17 +80,23 @@ module.exports = async () => {
 
     user1.posts.push(post1._id);
     user1.followers.push(user2._id);
+    user2.following.push(user1._id);
     user1.followers.push(user3._id);
+    user3.following.push(user1._id);
     await user1.save();
 
-    user2.followers.push(user1._id);
-    user2.followers.push(user3._id);
     user2.posts.push(post2._id);
+    user2.followers.push(user1._id);
+    user1.following.push(user2._id);
+    user2.followers.push(user3._id);
+    user3.following.push(user2._id);
     await user2.save();
 
-    user3.followers.push(user1._id);
-    user3.followers.push(user2._id);
     user3.posts.push(post3._id);
+    user3.followers.push(user1._id);
+    user1.following.push(user3._id);
+    user3.followers.push(user2._id);
+    user2.following.push(user3._id);
     await user3.save();
 
     console.log(users, posts);

@@ -13,4 +13,5 @@ module.exports = (app) => {
     [verifySignUp.validateSignInRequestBody],
     authcontroller.signin
   );
+  app.post("/sociopost/api/v1/auth/signout", authcontroller.signout);
 };

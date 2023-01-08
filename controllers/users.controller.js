@@ -132,3 +132,16 @@ exports.unFollowUser = async (req, res) => {
     res.status(403).json("you cant unfollow yourself");
   }
 };
+
+exports.topFiveActiveUsers = async (req, res) => {
+  try {
+    const users = await User.find().sort({ totalActiveTime: -1 });
+
+    return res.status(200).send(objectConverter.userResponse(user));
+  } catch (err) {
+    console.log("Some Err happend", err.message);
+    res.status(500).send({
+      message: "Some Internal server error",
+    });
+  }
+};

@@ -99,3 +99,15 @@ exports.commentOnPost = async (req, res) => {
     });
   }
 };
+
+exports.posthavingMostLike = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ likes: -1 }).limit(1);
+    res.status(201).send(posts[0]);
+  } catch (err) {
+    console.log("Some Err happend", err.message);
+    res.status(500).send({
+      message: "Some Internal server error",
+    });
+  }
+};
