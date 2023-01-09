@@ -63,7 +63,6 @@ exports.signin = async (req, res) => {
       userType: user.userType,
       userStatus: user.userStatus,
       accessToken: token,
-      isTokenValid: user.isTokenValid,
     });
   } catch (err) {
     console.log("Some Err happend", err.message);

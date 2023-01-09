@@ -1,5 +1,5 @@
 const authcontroller = require("../controllers/auth.controller");
-
+const { authJwt } = require("../middlewares");
 const { verifySignUp } = require("../middlewares");
 module.exports = (app) => {
   app.post(
@@ -13,5 +13,9 @@ module.exports = (app) => {
     [verifySignUp.validateSignInRequestBody],
     authcontroller.signin
   );
-  app.post("/sociopost/api/v1/auth/signout", authcontroller.signout);
+  app.post(
+    "/sociopost/api/v1/auth/signout",
+    [authJwt.isValidUserIdInRequestParam],
+    authcontroller.signout
+  );
 };

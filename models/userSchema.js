@@ -50,9 +50,8 @@ const userSchema = new mongoose.Schema({
   endTime: {
     type: Date,
   },
-  isTokenValid: {
-    type: Boolean,
-    default: false,
+  totalActiveTime: {
+    type: Date,
   },
   createdAt: {
     type: Date,
