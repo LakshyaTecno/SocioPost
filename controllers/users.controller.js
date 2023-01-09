@@ -136,8 +136,8 @@ exports.unFollowUser = async (req, res) => {
 exports.topFiveActiveUsers = async (req, res) => {
   try {
     const users = await User.find().sort({ totalActiveTime: -1 });
-
-    return res.status(200).send(objectConverter.userResponse(user));
+    const topUsers = users.slice(0, 5);
+    return res.status(200).send(objectConverter.userResponse(topUsers));
   } catch (err) {
     console.log("Some Err happend", err.message);
     res.status(500).send({
