@@ -75,9 +75,10 @@ exports.signin = async (req, res) => {
 
 exports.signout = async (req, res) => {
   try {
-    const usr = await User.findOne({ userId: req.userId });
+    const usr = await User.findOne({ userId: req.param.userId });
     usr.userStatus = constants.userStatus.inActive;
     usr.endTime = Date.now();
+    usr.totalActiveTime += usr.endTime - user.startTime;
     const user = await usr.save();
     res.status(200).send({
       name: user.name,
