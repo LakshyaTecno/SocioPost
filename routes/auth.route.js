@@ -14,7 +14,7 @@ module.exports = (app) => {
     authcontroller.signin
   );
   app.post(
-    "/sociopost/api/v1/auth/signout",
+    "/sociopost/api/v1/auth/signout/:id",
     [authJwt.isValidUserIdInRequestParam],
     authcontroller.signout
   );

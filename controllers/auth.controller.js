@@ -53,7 +53,7 @@ exports.signin = async (req, res) => {
         expiresIn: 600,
       }
     );
-
+    console.log(user);
     user.userStatus = constants.userStatus.active;
     user.startTime = Date.now();
     const user1 = await user.save();
@@ -76,10 +76,15 @@ exports.signin = async (req, res) => {
 
 exports.signout = async (req, res) => {
   try {
-    const usr = await User.findOne({ userId: req.param.userId });
+    const usr = await User.findOne({ userId: req.params.id });
     usr.userStatus = constants.userStatus.inActive;
     usr.endTime = Date.now();
-    usr.totalActiveTime += usr.endTime - user.startTime;
+    usr.totalActiveTime = !usr.totalActiveTime
+      ? Math.floor(usr.endTime / 1000) - Math.floor(usr.startTime / 1000)
+      : usr.totalActiveTime +
+        Math.floor(usr.endTime / 1000) -
+        Math.floor(usr.startTime / 1000);
+
     const user = await usr.save();
     res.status(200).send({
       name: user.name,

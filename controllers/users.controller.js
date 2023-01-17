@@ -67,9 +67,11 @@ exports.followUser = async (req, res) => {
     try {
       const user = await User.findOne({ userId: req.params.id });
       const currentUser = await User.findOne({ userId: req.userId });
+      console.log(user.userId);
+      console.log(currentUser.userId);
       console.log(user.followers.includes(currentUser.userId));
 
-      if (!user.followers.includes(currentUser.userId)) {
+      if (!user.followers.includes(currentUser._id)) {
         user.followers.push(currentUser._id);
         currentUser.following.push(user._id);
         const updatedUser = await user.save();
@@ -100,7 +102,6 @@ exports.unFollowUser = async (req, res) => {
       const user = await User.findOne({ userId: req.params.id });
       const currentUser = await User.findOne({ userId: req.userId });
       if (user.followers.includes(currentUser._id)) {
-        console.log("heere");
         await User.updateOne(
           { _id: user._id },
           { $pull: { followers: currentUser._id } }

@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
   },
   totalActiveTime: {
-    type: Date,
+    type: Number,
   },
   createdAt: {
     type: Date,
