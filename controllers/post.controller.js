@@ -32,7 +32,7 @@ exports.createPost = async (req, res) => {
     );
     res.status(201).send(postCreated);
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while creating new post", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -64,7 +64,7 @@ exports.likePost = async (req, res) => {
     }
     res.status(201).send(post);
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while like a post", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -93,7 +93,7 @@ exports.commentOnPost = async (req, res) => {
     }
     res.status(201).send(post);
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while comment on a post", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -105,7 +105,7 @@ exports.posthavingMostLike = async (req, res) => {
     const posts = await Post.find().sort({ likes: -1 }).limit(1);
     res.status(201).send(posts[0]);
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend getting most like post", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });

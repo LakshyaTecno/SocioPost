@@ -17,7 +17,7 @@ exports.findAll = async (req, res) => {
     const users = await User.find(queryObj);
     res.status(200).send(objectConverter.userResponse(users));
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend getting all users", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -30,7 +30,7 @@ exports.findUserById = async (req, res) => {
 
     return res.status(200).send(objectConverter.userResponse(user));
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while gettng a user by ID", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -55,7 +55,7 @@ exports.update = async (req, res) => {
       userType: updatedUser.userType,
     });
   } catch (err) {
-    console.log("Error whileDB operation", err.message);
+    console.log("Error while DB operation update a user", err.message);
     res.status(500).send({
       message: "Internal server error",
     });
@@ -67,9 +67,9 @@ exports.followUser = async (req, res) => {
     try {
       const user = await User.findOne({ userId: req.params.id });
       const currentUser = await User.findOne({ userId: req.userId });
-      console.log(currentUser);
+      console.log(user.followers.includes(currentUser.userId));
 
-      if (!user.followers.includes(req.userId)) {
+      if (!user.followers.includes(currentUser.userId)) {
         user.followers.push(currentUser._id);
         currentUser.following.push(user._id);
         const updatedUser = await user.save();
@@ -81,7 +81,7 @@ exports.followUser = async (req, res) => {
           UserFollwers: updatedUser.followers,
         });
       } else {
-        res.status(403).send("You allready follow this user");
+        res.status(403).send({ msg: "You allready follow this user" });
       }
     } catch (err) {
       console.log("Error while Follow an user", err.message);
@@ -90,7 +90,7 @@ exports.followUser = async (req, res) => {
       });
     }
   } else {
-    res.status(403).send("you cant follow yourself");
+    res.status(403).send({ msg: "you cant follow yourself" });
   }
 };
 
@@ -120,7 +120,7 @@ exports.unFollowUser = async (req, res) => {
           UserFollwers: updatedUser.followers,
         });
       } else {
-        res.status(403).send("You dont follow this user");
+        res.status(403).send({ msg: "You dont follow this user" });
       }
     } catch (err) {
       console.log("Error while UnFollow an user", err.message);
@@ -129,7 +129,7 @@ exports.unFollowUser = async (req, res) => {
       });
     }
   } else {
-    res.status(403).json("you cant unfollow yourself");
+    res.status(403).json({ msg: "you cant unfollow yourself" });
   }
 };
 
@@ -139,7 +139,7 @@ exports.topFiveActiveUsers = async (req, res) => {
     const topUsers = users.slice(0, 5);
     return res.status(200).send(objectConverter.userResponse(topUsers));
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend top five active users", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });

@@ -14,9 +14,9 @@ exports.signup = async (req, res) => {
   try {
     const userCreated = await User.create(userObj);
 
-    res.status(201).send(objectConverter.userResponse(userCreated));
+    res.status(201).send(objectConverter.userResponse([userCreated]));
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while Signup user", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -25,10 +25,8 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    const usr = await User.findOne({ userId: req.body.userId });
-    usr.userStatus = constants.userStatus.active;
-    usr.startTime = Date.now();
-    const user = await usr.save();
+    const user = await User.findOne({ userId: req.body.userId });
+
     if (!user) {
       return res.status(400).send({
         message: "Failed! UserId passed is not correct Please pass valid ID",
@@ -55,17 +53,21 @@ exports.signin = async (req, res) => {
         expiresIn: 600,
       }
     );
-    console.log(user);
+
+    user.userStatus = constants.userStatus.active;
+    user.startTime = Date.now();
+    const user1 = await user.save();
+
     res.status(200).send({
-      name: user.name,
-      userId: user.userId,
-      email: user.email,
-      userType: user.userType,
-      userStatus: user.userStatus,
+      name: user1.name,
+      userId: user1.userId,
+      email: user1.email,
+      userType: user1.userType,
+      userStatus: user1.userStatus,
       accessToken: token,
     });
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend while Signin User", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });
@@ -87,7 +89,7 @@ exports.signout = async (req, res) => {
       userStatus: user.userStatus,
     });
   } catch (err) {
-    console.log("Some Err happend", err.message);
+    console.log("Some Err happend  while signout user", err.message);
     res.status(500).send({
       message: "Some Internal server error",
     });

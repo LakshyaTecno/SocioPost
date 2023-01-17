@@ -13,7 +13,7 @@ const validateCreatePostBody = async (req, res, next) => {
         });
       }
     } catch (err) {
-      console.log("Some Err happend", err.message);
+      console.log("Some Err happend validate a post ", err.message);
       res.status(500).send({
         message: "Some Internal server error",
       });

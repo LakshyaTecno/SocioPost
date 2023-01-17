@@ -1,6 +1,7 @@
 const userController = require("../controllers/users.controller");
 const { authJwt } = require("../middlewares");
 
+const { verifySignUp } = require("../middlewares");
 module.exports = (app) => {
   app.get(
     "/sociopost/api/v1/users",
@@ -28,6 +29,7 @@ module.exports = (app) => {
       authJwt.verifyToken,
       authJwt.isValidUserIdInRequestParam,
       authJwt.isAdminOrUser,
+      verifySignUp.validateUserUpdateBody,
     ],
     userController.update
   );

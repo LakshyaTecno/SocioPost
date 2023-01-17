@@ -18,6 +18,7 @@ const verifyToken = (req, res, next) => {
     }
 
     req.userId = decoded.id;
+    console.log(req.userId);
     const user = await User.findOne({ userId: req.userId });
     if (user.userStatus == constants.userStatus.inActive) {
       return res.status(401).send({

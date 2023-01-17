@@ -85,7 +85,7 @@ const validateSignUpRequestBody = async (req, res, next) => {
   next();
 };
 
-const validateSignInRequestBody = (req, res, next) => {
+const validateSignInRequestBody = async (req, res, next) => {
   // Validate if the userId is present
   if (!req.body.userId) {
     return res.status(400).send({
@@ -103,7 +103,6 @@ const validateSignInRequestBody = (req, res, next) => {
 };
 
 const validateUserUpdateBody = async (req, res, next) => {
-  const user = await User.find({ userId: req.userId });
   if (req.body.email && !isValidEmail(req.body.email)) {
     return res.status(400).send({
       message: "Failed! Not a valid email id",
@@ -120,18 +119,9 @@ const validateUserUpdateBody = async (req, res, next) => {
     });
   }
 
-  const allowedUserStatus = [
-    constants.userStatus.active,
-    constants.userStatus.inActive,
-  ];
-
-  if (
-    req.body.status &&
-    user.userType !== constants.userTypes.admin &&
-    !allowedUserStatus.includes(req.body.userStatus)
-  ) {
+  if (req.body.status) {
     return res.status(400).send({
-      message: "Failed! UserStatus can only changed by Admin ",
+      message: "Failed! UserStatus can not changed ",
     });
   }
 
